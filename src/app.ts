@@ -14,6 +14,9 @@ import { SliderView } from './slider.ts';
 import { Picker } from './picker.ts';
 import { PickerView } from './picker.ts';
 
+import { InsetSelect } from './inset_select.ts';
+import { InsetSelectView } from './inset_select.ts';
+
 import { Box } from './box.ts';
 import { BoxView } from './box.ts';
 
@@ -31,6 +34,8 @@ class AppView extends Backbone.View<Backbone.Model> {
   private shadowColorPicker: PickerView;
   private backgroundColorPicker: PickerView;
   private boxColorPicker: PickerView;
+
+  private insetSelectView: InsetSelectView;
 
   private boxView: BoxView;
 
@@ -93,6 +98,11 @@ class AppView extends Backbone.View<Backbone.Model> {
     //   eventBus: this.eventBus
     // });
 
+    this.insetSelectView = new InsetSelectView({
+      model: new InsetSelect(),
+      eventBus: this.eventBus
+    });
+
     this.boxView = new BoxView({
       model: new Box(horizonalLength, verticalLength, blurRadius, spreadRadius, r, g, b, opacity),
       eventBus: this.eventBus
@@ -112,6 +122,8 @@ class AppView extends Backbone.View<Backbone.Model> {
     this.$('div#configure-panel').append(this.shadowColorPicker.el);
     // this.$('div#configure-panel').append(this.backgroundColorPicker.el);
     // this.$('div#configure-panel').append(this.boxColorPicker.el);
+
+    this.$('div#configure-panel').append(this.insetSelectView.el);
 
     this.$('div#box-panel').append(this.boxView.el);
 

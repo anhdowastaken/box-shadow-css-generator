@@ -11,6 +11,7 @@ class Box extends Backbone.Model {
   private _g: number;
   private _b: number;
   private _opacity: number;
+  private _inset: boolean;
 
   constructor(
     horizonalLength: number = 0,
@@ -20,7 +21,8 @@ class Box extends Backbone.Model {
     r: number = 0,
     g: number = 0,
     b: number = 0,
-    opacity: number = 0
+    opacity: number = 0,
+    inset: boolean = false
   ) {
     super();
     this._horizonalLength = horizonalLength;
@@ -31,6 +33,7 @@ class Box extends Backbone.Model {
     this._g = g;
     this._b = b;
     this._opacity = opacity;
+    this._inset = inset;
   }
 
   setHorizonalLength(value: number) {
@@ -97,8 +100,20 @@ class Box extends Backbone.Model {
     return this._opacity;
   }
 
+  setInset(value: boolean) {
+    this._inset = value;
+  }
+
+  getInset(): boolean {
+    return this._inset;
+  }
+
   getBoxShadowString(): string {
     let str: string = `${ this.getHorizonalLength().toString() }px ${ this.getVerticalLength().toString() }px ${ this.getBlurRadius() }px ${ this.getSpreadRadius().toString() }px rgba(${ this.getR().toString() }, ${ this.getG().toString() }, ${ this.getB().toString() }, ${ this.getOpacity().toString() })`;
+
+    if (this._inset) {
+      str += ' inset';
+    }
 
     return str;
   }
@@ -112,6 +127,7 @@ class BoxView extends Backbone.View<Box> {
     this.eventBus = options.eventBus;
     this.eventBus.on('sliderOnInput', this.sliderOnInput, this);
     this.eventBus.on('colorChange', this.colorChange, this);
+    this.eventBus.on('selectInset', this.selectInset, this);
     // this.eventBus.listenTo(this.eventBus, 'sliderOnInput', this.sliderOnInput);
     this.render();
   }
@@ -170,6 +186,12 @@ class BoxView extends Backbone.View<Box> {
     this.model.setR(r);
     this.model.setG(g);
     this.model.setB(b);
+
+    this.applyCssBoxShadow();
+  }
+
+  selectInset(inset: boolean) {
+    this.model.setInset(inset);
 
     this.applyCssBoxShadow();
   }
