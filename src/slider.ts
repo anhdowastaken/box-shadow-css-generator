@@ -24,7 +24,11 @@ class Slider extends Backbone.Model {
     this._unit = unit;
     this._min = min;
     this._max = max;
-    this._value = value;
+    if (id === 'opacity-slider') {
+      this._value = value / 100;
+    } else {
+      this._value = value;
+    }
   }
 
   getId(): string {
@@ -48,7 +52,11 @@ class Slider extends Backbone.Model {
   }
 
   setValue(value: number) {
-    this._value = value;
+    if (this._id == 'opacity-slider') {
+      this._value = value / 100;
+    } else {
+      this._value = value;
+    }
   }
 
   getValue(): number {
@@ -74,7 +82,7 @@ class SliderView extends Backbone.View<Slider> {
   render(): Backbone.View<Slider> {
     let templateHtml: string = '';
     templateHtml += '<p><%= title %></p>';
-    templateHtml += '<span id="value"><%= value %></span><span> <%= unit %></span>';
+    templateHtml += '<span id="value"><%= valueText %></span><span> <%= unit %></span>';
     templateHtml += '<br/>';
     templateHtml += '<input type="range" min="<%= min %>" max="<%= max %>" value="<%= value %>"/>';
     let template = _.template(templateHtml);
@@ -85,7 +93,8 @@ class SliderView extends Backbone.View<Slider> {
       unit: this.model.getUnit(),
       min: this.model.getMin(),
       max: this.model.getMax(),
-      value: this.model.getValue()
+      value: this.model.getId() === 'opacity-slider' ? this.model.getValue() * 100 : this.model.getValue(),
+      valueText: this.model.getValue()
     }));
 
     return this;

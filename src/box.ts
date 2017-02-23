@@ -7,6 +7,9 @@ class Box extends Backbone.Model {
   private _verticalLength: number;
   private _blurRadius: number;
   private _spreadRadius: number;
+  private _r: number;
+  private _g: number;
+  private _b: number;
   private _opacity: number;
 
   constructor(
@@ -14,6 +17,9 @@ class Box extends Backbone.Model {
     verticalLength: number = 0,
     blurRadius: number = 0,
     spreadRadius: number = 0,
+    r: number = 0,
+    g: number = 0,
+    b: number = 0,
     opacity: number = 0
   ) {
     super();
@@ -21,6 +27,9 @@ class Box extends Backbone.Model {
     this._verticalLength = verticalLength;
     this._blurRadius = blurRadius;
     this._spreadRadius = spreadRadius;
+    this._r = r;
+    this._g = g;
+    this._b = b;
     this._opacity = opacity;
   }
 
@@ -56,6 +65,30 @@ class Box extends Backbone.Model {
     return this._spreadRadius;
   }
 
+  setR(value: number) {
+    this._r = value;
+  }
+
+  getR(): number {
+    return this._r;
+  }
+
+  setG(value: number) {
+    this._g = value;
+  }
+
+  getG(): number {
+    return this._g;
+  }
+
+  setB(value: number) {
+    this._b = value;
+  }
+
+  getB(): number {
+    return this._b;
+  }
+
   setOpacity(value: number) {
     this._opacity = value;
   }
@@ -65,15 +98,7 @@ class Box extends Backbone.Model {
   }
 
   getBoxShadowString(): string {
-    let str: string = '';
-    str += this.getHorizonalLength().toString();
-    str += 'px ';
-    str += this.getVerticalLength().toString();
-    str += 'px ';
-    str += this.getBlurRadius().toString();
-    str += 'px ';
-    str += this.getSpreadRadius().toString();
-    str += 'px ';
+    let str: string = `${ this.getHorizonalLength().toString() }px ${ this.getVerticalLength().toString() }px ${ this.getBlurRadius() }px ${ this.getSpreadRadius().toString() }px rgba(${ this.getR().toString() }, ${ this.getG().toString() }, ${ this.getB().toString() }, ${ this.getOpacity().toString() })`;
 
     return str;
   }
@@ -86,25 +111,38 @@ class BoxView extends Backbone.View<Box> {
     super(options);
     this.eventBus = options.eventBus;
     this.eventBus.on('sliderOnInput', this.sliderOnInput, this);
+    this.eventBus.on('colorChange', this.colorChange, this);
     // this.eventBus.listenTo(this.eventBus, 'sliderOnInput', this.sliderOnInput);
     this.render();
   }
 
   render(): Backbone.View<Box> {
     let templateHtml: string = '';
-    templateHtml += '<div style="width: 300px; height: 100px; background-color: yellow">';
-    templateHtml += '<textarea rows="3"></textarea>';
+    templateHtml += '<div style="width: 500px; height: 300px; background-color: yellow">';
+    templateHtml += '<textarea class="form-control" rows="3"></textarea>';
     templateHtml += '</div>';
 
     let template = _.template(templateHtml);
-    this.$el.html(template(this.model.toJSON()));
-    this.$('div').css('box-shadow', this.model.getBoxShadowString());
+    this.$el.html(template({}));
+
+    this.applyCssBoxShadow();
 
     return this;
   }
 
+  applyCssBoxShadow() {
+    this.$('div').css('-webkit-box-shadow', this.model.getBoxShadowString());
+    this.$('div').css('-moz-box-shadow', this.model.getBoxShadowString());
+    this.$('div').css('box-shadow', this.model.getBoxShadowString());
+
+    let str: string = '';
+    str += '-webkit-box-shadow: ' + this.model.getBoxShadowString() + '\n';
+    str += '-moz-box-shadow: ' + this.model.getBoxShadowString() + '\n';
+    str += 'box-shadow: ' + this.model.getBoxShadowString();
+    this.$('textarea').text(str);
+  }
+
   sliderOnInput(id: string, value: number): void {
-    // this.$('p').html(id + ' ' + value.toString());
     switch (id) {
       case 'horizonal-length-slider':
         this.model.setHorizonalLength(value);
@@ -125,8 +163,15 @@ class BoxView extends Backbone.View<Box> {
         break;
     }
 
-    this.$('div').css('box-shadow', this.model.getBoxShadowString());
-    this.$('textarea').text('box-shadow: ' + this.$('div').css('box-shadow'));
+    this.applyCssBoxShadow();
+  }
+
+  colorChange(r: number, g: number, b: number): void {
+    this.model.setR(r);
+    this.model.setG(g);
+    this.model.setB(b);
+
+    this.applyCssBoxShadow();
   }
 }
 

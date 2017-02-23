@@ -12,6 +12,7 @@
     "expose-loader": "^0.7.3",
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
+    "spectrum-colorpicker": "^1.8.0",
     "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
     "typescript": "^2.1.6",

@@ -5,8 +5,14 @@ import * as Backbone from 'backbone';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js'; 
 
+import 'spectrum-colorpicker/spectrum.css';
+import 'spectrum-colorpicker/spectrum.js';
+
 import { Slider } from './slider.ts';
 import { SliderView } from './slider.ts';
+
+import { Picker } from './picker.ts';
+import { PickerView } from './picker.ts';
 
 import { Box } from './box.ts';
 import { BoxView } from './box.ts';
@@ -21,7 +27,13 @@ class AppView extends Backbone.View<Backbone.Model> {
   private blurRadiusSilderView: SliderView;
   private spreadRadiusSilderView: SliderView;
   private opacitySilderView: SliderView;
+
+  private shadowColorPicker: PickerView;
+  private backgroundColorPicker: PickerView;
+  private boxColorPicker: PickerView;
+
   private boxView: BoxView;
+
   private eventBus: any;
 
   constructor(options: any = {}) {
@@ -30,10 +42,14 @@ class AppView extends Backbone.View<Backbone.Model> {
   }
 
   initialize() {
-    let horizonalLength = 10;
-    let verticalLength = 10;
-    let blurRadius = 5;
-    let spreadRadius = 0
+    let horizonalLength: number = 10;
+    let verticalLength: number = 10;
+    let blurRadius: number = 5;
+    let spreadRadius: number = 0
+    let opacity: number = 75; // Value of opacity must be divided by 100
+    let r: number = 0;
+    let g: number = 0;
+    let b: number = 0;
 
     this.eventBus = _.extend({}, Backbone.Events);
 
@@ -57,13 +73,28 @@ class AppView extends Backbone.View<Backbone.Model> {
       eventBus: this.eventBus
     });
 
-    // this.opacitySilderView = new SliderView({
-    //   model: new Slider('opacity-slider', 'Opacity', 'px', 0.75),
+    this.opacitySilderView = new SliderView({
+      model: new Slider('opacity-slider', 'Opacity', '', 0, 100, opacity),
+      eventBus: this.eventBus
+    });
+
+    this.shadowColorPicker = new PickerView({
+      model: new Picker('shadow-color-picker', 'Shadow Color', '#000000'),
+      eventBus: this.eventBus
+    });
+
+    // this.backgroundColorPicker = new PickerView({
+    //   model: new Picker('background-color-picker', 'Background Color', '#000000'),
+    //   eventBus: this.eventBus
+    // });
+
+    // this.boxColorPicker = new PickerView({
+    //   model: new Picker('box-color-picker', 'Box Color', '#000000'),
     //   eventBus: this.eventBus
     // });
 
     this.boxView = new BoxView({
-      model: new Box(horizonalLength, verticalLength, blurRadius, spreadRadius),
+      model: new Box(horizonalLength, verticalLength, blurRadius, spreadRadius, r, g, b, opacity),
       eventBus: this.eventBus
     });
 
@@ -76,7 +107,12 @@ class AppView extends Backbone.View<Backbone.Model> {
     this.$('div#configure-panel').append(this.verticalLengthSilderView.el);
     this.$('div#configure-panel').append(this.blurRadiusSilderView.el);
     this.$('div#configure-panel').append(this.spreadRadiusSilderView.el);
-    // this.$('div#configure-panel').append(this.opacitySilderView.el);
+    this.$('div#configure-panel').append(this.opacitySilderView.el);
+
+    this.$('div#configure-panel').append(this.shadowColorPicker.el);
+    // this.$('div#configure-panel').append(this.backgroundColorPicker.el);
+    // this.$('div#configure-panel').append(this.boxColorPicker.el);
+
     this.$('div#box-panel').append(this.boxView.el);
 
     return this;
