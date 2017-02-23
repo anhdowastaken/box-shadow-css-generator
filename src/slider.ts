@@ -81,7 +81,7 @@ class SliderView extends Backbone.View<Slider> {
 
   render(): Backbone.View<Slider> {
     let templateHtml: string = '';
-    templateHtml += '<p><%= title %></p>';
+    templateHtml += '<strong><%= title %></strong><br/>';
     templateHtml += '<span id="value"><%= valueText %></span><span> <%= unit %></span>';
     templateHtml += '<br/>';
     templateHtml += '<input type="range" min="<%= min %>" max="<%= max %>" value="<%= value %>"/>';

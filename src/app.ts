@@ -112,7 +112,7 @@ class AppView extends Backbone.View<Backbone.Model> {
   }
 
   render(): Backbone.View<Backbone.Model> {
-    this.$el.prepend('<h1>Box Shadow CSS Generator</h1>');
+    this.$('div.container').prepend('<h1>Box Shadow CSS Generator</h1>');
     this.$('div#configure-panel').append(this.horizonalLengthSilderView.el);
     this.$('div#configure-panel').append(this.verticalLengthSilderView.el);
     this.$('div#configure-panel').append(this.blurRadiusSilderView.el);
