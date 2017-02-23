@@ -6,13 +6,24 @@ class Slider extends Backbone.Model {
   private _id: string;
   private _title: string;
   private _unit: string;
+  private _min: number;
+  private _max: number;
   private _value: number;
 
-  constructor(id: string = '', title: string = '', unit: string = '', value: number = 0) {
+  constructor(
+    id: string = '',
+    title: string = '',
+    unit: string = '',
+    min: number = 0,
+    max: number = 100,
+    value: number = 0
+  ) {
     super();
     this._id = id;
     this._title = title;
     this._unit = unit;
+    this._min = min;
+    this._max = max;
     this._value = value;
   }
 
@@ -26,6 +37,14 @@ class Slider extends Backbone.Model {
 
   getUnit(): string {
     return this._unit;
+  }
+
+  getMin(): number {
+    return this._min;
+  }
+
+  getMax(): number {
+    return this._max;
   }
 
   setValue(value: number) {
@@ -57,13 +76,15 @@ class SliderView extends Backbone.View<Slider> {
     templateHtml += '<p><%= title %></p>';
     templateHtml += '<span id="value"><%= value %></span><span> <%= unit %></span>';
     templateHtml += '<br/>';
-    templateHtml += '<input type="range" value="<%= value %>"/>';
+    templateHtml += '<input type="range" min="<%= min %>" max="<%= max %>" value="<%= value %>"/>';
     let template = _.template(templateHtml);
 
     // console.log(this.model.toJSON());
     this.$el.html(template({
       title: this.model.getTitle(),
       unit: this.model.getUnit(),
+      min: this.model.getMin(),
+      max: this.model.getMax(),
       value: this.model.getValue()
     }));
 

@@ -38,22 +38,22 @@ class AppView extends Backbone.View<Backbone.Model> {
     this.eventBus = _.extend({}, Backbone.Events);
 
     this.horizonalLengthSilderView = new SliderView({
-      model: new Slider('horizonal-length-slider', 'Horizonal Length', 'px', horizonalLength),
+      model: new Slider('horizonal-length-slider', 'Horizonal Length', 'px', -200, 200, horizonalLength),
       eventBus: this.eventBus
     });
 
     this.verticalLengthSilderView = new SliderView({
-      model: new Slider('vertical-length-slider', 'Vertical Length', 'px', verticalLength),
+      model: new Slider('vertical-length-slider', 'Vertical Length', 'px', -200, 200, verticalLength),
       eventBus: this.eventBus
     });
 
     this.blurRadiusSilderView = new SliderView({
-      model: new Slider('blur-radius-slider', 'Blur Radius', 'px', blurRadius),
+      model: new Slider('blur-radius-slider', 'Blur Radius', 'px', 0, 300, blurRadius),
       eventBus: this.eventBus
     });
 
     this.spreadRadiusSilderView = new SliderView({
-      model: new Slider('spread-radius-slider', 'Spread Radius', 'px', spreadRadius),
+      model: new Slider('spread-radius-slider', 'Spread Radius', 'px', -200, 200, spreadRadius),
       eventBus: this.eventBus
     });
 
