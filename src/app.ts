@@ -2,6 +2,9 @@ import * as $ from 'jquery';
 import * as _ from 'underscore';
 import * as Backbone from 'backbone';
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js'; 
+
 import { Slider } from './slider.ts';
 import { SliderView } from './slider.ts';
 
@@ -27,35 +30,40 @@ class AppView extends Backbone.View<Backbone.Model> {
   }
 
   initialize() {
+    let horizonalLength = 10;
+    let verticalLength = 10;
+    let blurRadius = 5;
+    let spreadRadius = 0
+
     this.eventBus = _.extend({}, Backbone.Events);
 
     this.horizonalLengthSilderView = new SliderView({
-      model: new Slider('horizonal-length-slider', 'Horizonal Length', 'px', 10),
+      model: new Slider('horizonal-length-slider', 'Horizonal Length', 'px', horizonalLength),
       eventBus: this.eventBus
     });
 
     this.verticalLengthSilderView = new SliderView({
-      model: new Slider('vertical-length-slider', 'Vertical Length', 'px', 10),
+      model: new Slider('vertical-length-slider', 'Vertical Length', 'px', verticalLength),
       eventBus: this.eventBus
     });
 
     this.blurRadiusSilderView = new SliderView({
-      model: new Slider('blur-radius-slider', 'Blur Radius', 'px', 5),
+      model: new Slider('blur-radius-slider', 'Blur Radius', 'px', blurRadius),
       eventBus: this.eventBus
     });
 
     this.spreadRadiusSilderView = new SliderView({
-      model: new Slider('spread-radius-slider', 'Spread Radius', 'px', 0),
+      model: new Slider('spread-radius-slider', 'Spread Radius', 'px', spreadRadius),
       eventBus: this.eventBus
     });
 
-    this.opacitySilderView = new SliderView({
-      model: new Slider('opacity-slider', 'Opacity', 'px', 0.75),
-      eventBus: this.eventBus
-    });
+    // this.opacitySilderView = new SliderView({
+    //   model: new Slider('opacity-slider', 'Opacity', 'px', 0.75),
+    //   eventBus: this.eventBus
+    // });
 
     this.boxView = new BoxView({
-      model: new Box(),
+      model: new Box(horizonalLength, verticalLength, blurRadius, spreadRadius),
       eventBus: this.eventBus
     });
 
@@ -63,13 +71,13 @@ class AppView extends Backbone.View<Backbone.Model> {
   }
 
   render(): Backbone.View<Backbone.Model> {
-    this.$el.append('<h1>Box Shadow CSS Generator</h1>');
-    this.$el.append(this.horizonalLengthSilderView.el);
-    this.$el.append(this.verticalLengthSilderView.el);
-    this.$el.append(this.blurRadiusSilderView.el);
-    this.$el.append(this.spreadRadiusSilderView.el);
-    this.$el.append(this.opacitySilderView.el);
-    this.$el.append(this.boxView.el);
+    this.$el.prepend('<h1>Box Shadow CSS Generator</h1>');
+    this.$('div#configure-panel').append(this.horizonalLengthSilderView.el);
+    this.$('div#configure-panel').append(this.verticalLengthSilderView.el);
+    this.$('div#configure-panel').append(this.blurRadiusSilderView.el);
+    this.$('div#configure-panel').append(this.spreadRadiusSilderView.el);
+    // this.$('div#configure-panel').append(this.opacitySilderView.el);
+    this.$('div#box-panel').append(this.boxView.el);
 
     return this;
   }
