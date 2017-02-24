@@ -39,7 +39,7 @@ class AppView extends Backbone.View<Backbone.Model> {
 
   private boxView: BoxView;
 
-  private eventBus: any;
+  private eventBus: any; // Event bus is used to share events between views
 
   constructor(options: any = {}) {
     options.el = 'body';
@@ -55,6 +55,8 @@ class AppView extends Backbone.View<Backbone.Model> {
     let r: number = 0;
     let g: number = 0;
     let b: number = 0;
+
+    let shadowColor = '#000000';
 
     this.eventBus = _.extend({}, Backbone.Events);
 
@@ -84,7 +86,7 @@ class AppView extends Backbone.View<Backbone.Model> {
     });
 
     this.shadowColorPicker = new PickerView({
-      model: new Picker('shadow-color-picker', 'Shadow Color', '#000000'),
+      model: new Picker('shadow-color-picker', 'Shadow Color', shadowColor),
       eventBus: this.eventBus
     });
 
@@ -113,6 +115,7 @@ class AppView extends Backbone.View<Backbone.Model> {
 
   render(): Backbone.View<Backbone.Model> {
     this.$('div.container').prepend('<h1>Box Shadow CSS Generator</h1>');
+
     this.$('div#configure-panel').append(this.horizonalLengthSilderView.el);
     this.$('div#configure-panel').append(this.verticalLengthSilderView.el);
     this.$('div#configure-panel').append(this.blurRadiusSilderView.el);
@@ -126,6 +129,13 @@ class AppView extends Backbone.View<Backbone.Model> {
     this.$('div#configure-panel').append(this.insetSelectView.el);
 
     this.$('div#box-panel').append(this.boxView.el);
+
+    // Apply spectrum color picker
+    this.$(document).ready(function() {
+      $('input.color-picker').spectrum({
+        color: '#000000'
+      });
+    });
 
     return this;
   }

@@ -24,6 +24,7 @@ class Slider extends Backbone.Model {
     this._unit = unit;
     this._min = min;
     this._max = max;
+    // Because opacity value is from 0 to 1
     if (id === 'opacity-slider') {
       this._value = value / 100;
     } else {
@@ -52,6 +53,7 @@ class Slider extends Backbone.Model {
   }
 
   setValue(value: number) {
+    // Because opacity value is from 0 to 1
     if (this._id == 'opacity-slider') {
       this._value = value / 100;
     } else {
@@ -93,6 +95,7 @@ class SliderView extends Backbone.View<Slider> {
       unit: this.model.getUnit(),
       min: this.model.getMin(),
       max: this.model.getMax(),
+      // Because opacity value is from 0 to 1
       value: this.model.getId() === 'opacity-slider' ? this.model.getValue() * 100 : this.model.getValue(),
       valueText: this.model.getValue()
     }));

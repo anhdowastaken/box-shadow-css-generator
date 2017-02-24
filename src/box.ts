@@ -109,7 +109,12 @@ class Box extends Backbone.Model {
   }
 
   getBoxShadowString(): string {
-    let str: string = `${ this.getHorizonalLength().toString() }px ${ this.getVerticalLength().toString() }px ${ this.getBlurRadius() }px ${ this.getSpreadRadius().toString() }px rgba(${ this.getR().toString() }, ${ this.getG().toString() }, ${ this.getB().toString() }, ${ this.getOpacity().toString() })`;
+    let str: string = ``;
+    str += `${ this.getHorizonalLength().toString() }px `;
+    str += `${ this.getVerticalLength().toString() }px `;
+    str += `${ this.getBlurRadius() }px `;
+    str += `${ this.getSpreadRadius().toString() }px `;
+    str += `rgba(${ this.getR().toString() }, ${ this.getG().toString() }, ${ this.getB().toString() }, ${ this.getOpacity().toString() })`;
 
     if (this._inset) {
       str += ' inset';
@@ -151,14 +156,15 @@ class BoxView extends Backbone.View<Box> {
     this.$('div').css('-moz-box-shadow', this.model.getBoxShadowString());
     this.$('div').css('box-shadow', this.model.getBoxShadowString());
 
-    let str: string = '';
-    str += '-webkit-box-shadow: ' + this.model.getBoxShadowString() + '\n';
-    str += '-moz-box-shadow: ' + this.model.getBoxShadowString() + '\n';
-    str += 'box-shadow: ' + this.model.getBoxShadowString();
+    let str: string = ``;
+    str += `-webkit-box-shadow: ${ this.model.getBoxShadowString() }\n`;
+    str += `-moz-box-shadow: ${ this.model.getBoxShadowString() }\n`;
+    str += `box-shadow: ${ this.model.getBoxShadowString() }`;
     this.$('textarea').text(str);
   }
 
   sliderOnInput(id: string, value: number): void {
+    // Depend on type of slider we will update value of corresponding item
     switch (id) {
       case 'horizonal-length-slider':
         this.model.setHorizonalLength(value);
