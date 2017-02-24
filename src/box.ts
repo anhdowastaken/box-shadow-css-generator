@@ -2,6 +2,10 @@ import * as $ from 'jquery';
 import * as _ from 'underscore';
 import * as Backbone from 'backbone';
 
+import { Slider } from './slider.ts';
+import { PickerView } from './picker.ts';
+import { InsetSelectView } from './inset_select.ts';
+
 class Box extends Backbone.Model {
   private _horizonalLength: number;
   private _verticalLength: number;
@@ -130,10 +134,14 @@ class BoxView extends Backbone.View<Box> {
   constructor(options: any = {}) {
     super(options);
     this.eventBus = options.eventBus;
-    this.eventBus.on('sliderOnInput', this.sliderOnInput, this);
-    this.eventBus.on('colorChange', this.colorChange, this);
-    this.eventBus.on('selectInset', this.selectInset, this);
-    // this.eventBus.listenTo(this.eventBus, 'sliderOnInput', this.sliderOnInput);
+    // this.eventBus.on('sliderOnInput', this.sliderOnInput, this);
+    // this.eventBus.on('colorChange', this.colorChange, this);
+    // this.eventBus.on('selectInset', this.selectInset, this);
+    // To be safety and avoid zombie, use 'listenTo' instead of 'on'
+    this.eventBus.listenTo(this.eventBus, 'sliderOnInput', this.sliderOnInput.bind(this));
+    this.eventBus.listenTo(this.eventBus, 'colorChange', this.colorChange.bind(this));
+    this.eventBus.listenTo(this.eventBus, 'selectInset', this.selectInset.bind(this));
+
     this.render();
   }
 
