@@ -10,7 +10,7 @@ class Picker extends Backbone.Model {
   constructor(
     id: string = '',
     title: string = '',
-    value: string = ''
+    value: string = '#000000'
   ) {
     super();
     this._id = id;
@@ -61,8 +61,18 @@ class PickerView extends Backbone.View<Picker> {
 
   changeColor(event: any, color: any) {
     this.$('span#value').html(color.toHexString());
-    let rgb = color.toRgb();
-    this.eventBus.trigger('colorChange', rgb.r, rgb.g, rgb.b);
+    switch (this.model.getId()) {
+      case ('shadow-color-picker'):
+        let rgb = color.toRgb();
+        this.eventBus.trigger('shadowChange', rgb.r, rgb.g, rgb.b);
+        break;
+      case ('box-color-picker'):
+        this.eventBus.trigger('boxColorChange', color.toHexString());
+        break;
+      default:
+        break;
+    }
+    
   }
 }
 

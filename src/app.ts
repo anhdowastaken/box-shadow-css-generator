@@ -47,6 +47,9 @@ class AppView extends Backbone.View<Backbone.Model> {
   }
 
   initialize() {
+    let width: number = 500;
+    let height: number = 300;
+
     let horizonalLength: number = 10;
     let verticalLength: number = 10;
     let blurRadius: number = 5;
@@ -57,6 +60,7 @@ class AppView extends Backbone.View<Backbone.Model> {
     let b: number = 0;
 
     let shadowColor = '#000000';
+    let boxColor = '#ffff00';
 
     this.eventBus = _.extend({}, Backbone.Events);
 
@@ -95,10 +99,10 @@ class AppView extends Backbone.View<Backbone.Model> {
     //   eventBus: this.eventBus
     // });
 
-    // this.boxColorPicker = new PickerView({
-    //   model: new Picker('box-color-picker', 'Box Color', '#000000'),
-    //   eventBus: this.eventBus
-    // });
+    this.boxColorPicker = new PickerView({
+      model: new Picker('box-color-picker', 'Box Color', boxColor),
+      eventBus: this.eventBus
+    });
 
     this.insetSelectView = new InsetSelectView({
       model: new InsetSelect(),
@@ -106,11 +110,20 @@ class AppView extends Backbone.View<Backbone.Model> {
     });
 
     this.boxView = new BoxView({
-      model: new Box(horizonalLength, verticalLength, blurRadius, spreadRadius, r, g, b, opacity),
+      model: new Box(width, height, boxColor, horizonalLength, verticalLength, blurRadius, spreadRadius, r, g, b, opacity),
       eventBus: this.eventBus
     });
 
     this.render();
+    // Apply spectrum color picker
+    this.$(document).ready(function() {
+      $('input.color-picker#shadow-color-picker').spectrum({
+        color: shadowColor
+      });
+      $('input.color-picker#box-color-picker').spectrum({
+        color: boxColor
+      });
+    });
   }
 
   render(): Backbone.View<Backbone.Model> {
@@ -124,18 +137,11 @@ class AppView extends Backbone.View<Backbone.Model> {
 
     this.$('div#configure-panel').append(this.shadowColorPicker.el);
     // this.$('div#configure-panel').append(this.backgroundColorPicker.el);
-    // this.$('div#configure-panel').append(this.boxColorPicker.el);
+    this.$('div#configure-panel').append(this.boxColorPicker.el);
 
     this.$('div#configure-panel').append(this.insetSelectView.el);
 
     this.$('div#box-panel').append(this.boxView.el);
-
-    // Apply spectrum color picker
-    this.$(document).ready(function() {
-      $('input.color-picker').spectrum({
-        color: '#000000'
-      });
-    });
 
     return this;
   }

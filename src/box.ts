@@ -7,6 +7,9 @@ import { PickerView } from './picker.ts';
 import { InsetSelectView } from './inset_select.ts';
 
 class Box extends Backbone.Model {
+  private _width: number;
+  private _height: number;
+  private _color: string;
   private _horizonalLength: number;
   private _verticalLength: number;
   private _blurRadius: number;
@@ -18,6 +21,9 @@ class Box extends Backbone.Model {
   private _inset: boolean;
 
   constructor(
+    width: number = 500,
+    height: number = 300,
+    color: string = '#ffff00',
     horizonalLength: number = 0,
     verticalLength: number = 0,
     blurRadius: number = 0,
@@ -29,6 +35,9 @@ class Box extends Backbone.Model {
     inset: boolean = false
   ) {
     super();
+    this._width = width;
+    this._height = height;
+    this._color = color;
     this._horizonalLength = horizonalLength;
     this._verticalLength = verticalLength;
     this._blurRadius = blurRadius;
@@ -38,6 +47,30 @@ class Box extends Backbone.Model {
     this._b = b;
     this._opacity = opacity;
     this._inset = inset;
+  }
+
+  setWidth(value: number) {
+    this._width = value;
+  }
+
+  getWidth(): number {
+    return this._width;
+  }
+
+  setHeight(value: number) {
+    this._height = value;
+  }
+
+  getHeight(): number {
+    return this._height;
+  }
+
+  setColor(value: string) {
+    this._color = value;
+  }
+
+  getColor(): string {
+    return this._color;
   }
 
   setHorizonalLength(value: number) {
@@ -112,6 +145,24 @@ class Box extends Backbone.Model {
     return this._inset;
   }
 
+  getWidthString(): string {
+    let str: string = ``;
+    str += `width: ${ this.getWidth() }px`;
+
+    return str;
+  }
+
+  getHeightString(): string {
+    let str: string = ``;
+    str += `height: ${ this.getHeight() }px`;
+
+    return str;
+  }
+
+  getColorString() {
+    return this.getColor();
+  }
+
   getBoxShadowString(): string {
     let str: string = ``;
     str += `${ this.getHorizonalLength().toString() }px `;
@@ -139,7 +190,8 @@ class BoxView extends Backbone.View<Box> {
     // this.eventBus.on('selectInset', this.selectInset, this);
     // To be safety and avoid zombie, use 'listenTo' instead of 'on'
     this.eventBus.listenTo(this.eventBus, 'sliderOnInput', this.sliderOnInput.bind(this));
-    this.eventBus.listenTo(this.eventBus, 'colorChange', this.colorChange.bind(this));
+    this.eventBus.listenTo(this.eventBus, 'shadowChange', this.shadowChange.bind(this));
+    this.eventBus.listenTo(this.eventBus, 'boxColorChange', this.boxColorChange.bind(this));
     this.eventBus.listenTo(this.eventBus, 'selectInset', this.selectInset.bind(this));
 
     this.render();
@@ -147,16 +199,27 @@ class BoxView extends Backbone.View<Box> {
 
   render(): Backbone.View<Box> {
     let templateHtml: string = '';
-    templateHtml += '<div style="width: 500px; height: 300px; background-color: yellow">';
+    templateHtml += '<div>';
     templateHtml += '<textarea class="form-control" rows="3"></textarea>';
     templateHtml += '</div>';
 
     let template = _.template(templateHtml);
     this.$el.html(template({}));
 
+    this.applyCssWidthHeight();
+    this.applyCssBackgroundColor();
     this.applyCssBoxShadow();
 
     return this;
+  }
+
+  applyCssWidthHeight() {
+    this.$('div').css('width', this.model.getWidth());
+    this.$('div').css('height', this.model.getHeight());
+  }
+
+  applyCssBackgroundColor() {
+    this.$('div').css('background-color', this.model.getColor());
   }
 
   applyCssBoxShadow() {
@@ -196,12 +259,18 @@ class BoxView extends Backbone.View<Box> {
     this.applyCssBoxShadow();
   }
 
-  colorChange(r: number, g: number, b: number): void {
+  shadowChange(r: number, g: number, b: number): void {
     this.model.setR(r);
     this.model.setG(g);
     this.model.setB(b);
 
     this.applyCssBoxShadow();
+  }
+
+  boxColorChange(color: string) {
+    this.model.setColor(color);
+
+    this.applyCssBackgroundColor();
   }
 
   selectInset(inset: boolean) {
