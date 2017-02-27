@@ -1,6 +1,7 @@
 {
   "name": "box-shadow-css-generator",
   "scripts": {
+    "postinstall": "npm run build",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
