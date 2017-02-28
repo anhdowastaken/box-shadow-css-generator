@@ -44,12 +44,7 @@ class PickerView extends Backbone.View<Picker> {
   }
 
   render(): Backbone.View<Picker> {
-    let templateHtml: string = '';
-    templateHtml += '<strong><%= title %></strong><br/>';
-    templateHtml += '<span id="value"><%= value %></span><span> </span>';
-    templateHtml += '<input id="<%= id %>" class="color-picker"/>';
-
-    let template = _.template(templateHtml);
+    let template = _.template($('#picker-template').html());
     this.$el.html(template({
       id: this.model.getId(),
       title: this.model.getTitle(),

@@ -198,12 +198,7 @@ class BoxView extends Backbone.View<Box> {
   }
 
   render(): Backbone.View<Box> {
-    let templateHtml: string = '';
-    templateHtml += '<div>';
-    templateHtml += '<textarea class="form-control" rows="3"></textarea>';
-    templateHtml += '</div>';
-
-    let template = _.template(templateHtml);
+    let template = _.template($('#box-template').html());
     this.$el.html(template({}));
 
     this.applyCssWidthHeight();

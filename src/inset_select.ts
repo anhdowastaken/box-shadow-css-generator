@@ -21,13 +21,7 @@ class InsetSelectView extends Backbone.View<InsetSelect> {
   }
 
   render(): Backbone.View<InsetSelect> {
-    let templateHtml: string = '';
-    templateHtml += '<select class="form-control">';
-    templateHtml += '<option>Outline</option>';
-    templateHtml += '<option>Inset</option>';
-    templateHtml += '</select>';
-
-    let template = _.template(templateHtml);
+    let template = _.template($('#select-template').html());
     this.$el.html(template({}));
 
     return this;

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Box Shadow CSS Generator</title>
+</head>
+<body>
+  <script src="/build/bundle.js"></script>
+  <script id="box-template" type="text/template">
+    <div>
+      <textarea class="form-control" rows="3"></textarea>
+    </div>
+  </script>
+
+  <script id="select-template" type="text/template">
+    <select class="form-control">
+      <option>Outline</option>
+      <option>Inset</option>
+    </select>
+  </script>
+
+  <script id="picker-template" type="text/template">
+    <strong><%= title %></strong><br/>
+    <span id="value"><%= value %></span><span> </span>
+    <input id="<%= id %>" class="color-picker"/>
+  </script>
+
+  <script id="slider-template" type="text/template">
+    <strong><%= title %></strong><br/>
+    <span id="value"><%= valueText %></span><span> <%= unit %></span>
+    <br/>
+    <input type="range" min="<%= min %>" max="<%= max %>" value="<%= value %>"/>
+  </script>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6" id="configure-panel"></div>
+      <div class="col-xs-6" id="box-panel"></div>
+    </div>
+  </div>
+</body>
+</html>
